@@ -2,8 +2,9 @@ package com.example.stock.service;
 
 import com.example.stock.domain.Stock;
 import com.example.stock.repository.StockRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class StockService {
@@ -20,7 +21,9 @@ public class StockService {
     //@Transactional을 주석 처리하면 테스트 통과
     //즉 syncronized는 하나의 프로세스 안에서만 보장이 됨
     //보통 여러대 서버를 사용하므로 잘 사용되지 않는다.
-    public synchronized void decrease(Long id, Long quantity) {
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void decrease(Long id, Long quantity) {
         // Stock 조회
         // 재고를 감소시킨 뒤
         // 갱신 값 저장
