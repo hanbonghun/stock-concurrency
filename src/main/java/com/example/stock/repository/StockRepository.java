@@ -16,4 +16,12 @@ public interface StockRepository extends JpaRepository<Stock, Long> {
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select s from Stock s where s.id = :id")
     Stock findByIdWithPessimisticLock(@Param("id") Long id);
+
+    //별도의 lock을 잡지 않으므로 perssimistic lock보다 성능상 이점
+    //update 실패시 로직을 개발자가 별도로 작성해 주어야 번거로움
+    //충돌이 빈번 -> pessimistic lock
+    //충돌이 빈번 x -> optimistic lock
+    @Lock(LockModeType.OPTIMISTIC)
+    @Query("select s from Stock s where s.id = :id")
+    Stock findByIdWithOptimisticLock(Long id);
 }
